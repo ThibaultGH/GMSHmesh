@@ -16,17 +16,17 @@ mesh::mesh(char* filename){
   
   // Some local variables :
   string line_my_file;
-  string char_line;
-  string temp_str;
-  int count_spaces = 0;
-  int line_size;
+  // string char_line;
+  
+  // string temp_str;
+  // int line_size;
   char space = ' ';
-  int* save_spaces_pos;
+  // int* save_spaces_pos;
   bool found_nb_nodes = false;
   bool found_nb_elements = false;
-  vector<string> out;
+  vector<string> splitted_line;
 
-  save_spaces_pos = (int *) malloc(sizeof(int)*50);
+  // save_spaces_pos = (int *) malloc(sizeof(int)*50);
 
   // Start reading the mesh file
   if (my_file.is_open()) {
@@ -34,15 +34,13 @@ mesh::mesh(char* filename){
 
     while (getline(my_file,line_my_file)) {
 
-      /*
-	This while loop works this way :
+      /*This while loop works this way :
 	     _ if a line "$Nodes" or "$Elements" is found, the next line gets us the number of nodes and elements respectively.
 	     _ Once we got them, we will read the lines of the file exactly this number of times.
 	     _ For the nodes : 
 	           _ The first number we encounter is the number of the nodes that we discard, the next three are the coordinates that we but into an array nodes[nb_nodes*3].
 	       For the elements :
-	           _ The three integer number we get are the number of the nodes forming a triangle, starting from 1 we need to do -1 to respect indexation in C++ starting at 0.
-       */
+	           _ The three integer number we get are the number of the nodes forming a triangle, starting from 1 we need to do -1 to respect indexation in C++ starting at 0.*/
       
       if (found_nb_nodes) {
 	
@@ -55,40 +53,20 @@ mesh::mesh(char* filename){
 
 	  getline(my_file,line_my_file);
 
-	  out = split(line_my_file,space);
+	  splitted_line = split(line_my_file,space); // splitted_line = {"node_number","node_1st_coor","node_2nd_coor","node_3rd_coor"}
 
-	  for (int k = 0; k < out.size(); ++k) {
-	    cout << out[k] << endl;
+	  // cout << "We are writting node " << splitted_line[0] << " with coordinate : ";
+
+	  for (int i1 = 0; i1 < splitted_line.size()-1; ++i1) {
+	    nodes[(stoi(splitted_line[0])-1)*3+i1] = stof(splitted_line[i1+1]);
+	    // cout << splitted_line[i1+1] << " ";
+
 	  }
 
+	  // cout << endl;
 
-	  for (int i1 = 0; i1 < line_my_file.size(); ++i1) {
 
-	    if (line_my_file[i1] == space) { // if (line_myfile[i1] in "0123456789.") do
 
-	      // cout << char_line << endl;
-	      if (count_spaces == 0) {
-		++count_spaces;
-		char_line.clear();
-	      }
-	      else {
-		nodes[i0*3+count_spaces-1] = stof(char_line);
-		
-		// cout << nodes[i0*3+count_spaces-1] << endl;
-
-		++count_spaces;
-	      
-		char_line.clear();
-	      
-	      }
-	    }
-	    else {
-	      temp_str.clear();
-	      temp_str += line_my_file[i1];
-	      char_line.append(temp_str);
-	    }	  
-	  }
-	  count_spaces = 0;
 	}
       }
       else if (found_nb_elements) { // We will enter once here after we've crossed the expression "$Elements" and load all the elements in the array elements.
@@ -96,38 +74,19 @@ mesh::mesh(char* filename){
 	found_nb_elements = false;
 
 	elements = (int* ) malloc(sizeof(int)*nb_elements*3);
-	
-	// for (int i3 = 0; i3 < nb_elements; ++i3) {
-	//   getline(my_file,line_my_file);
 
-	//   line_size = line_my_file.size();
-	  
-	//   // cout << line_my_file[line_size-1]<< " " << line_my_file[line_size-3] << endl;
+	for (int i2 = 0; i2 < nb_elements; ++i2) {
+	  getline(my_file,line_my_file);
 
-	//   for (int i4 = line_size-1; i4 > -1; --i4) {
+	  splitted_line = split(line_my_file,space);
 
-	//     if (line_my_file[i4] == space) {
+	  for (int i3 = 0; i3 < splitted_line.size(); ++i3) {
+	    cout << splitted_line[i3] << " ";
+	  }
+	  cout << endl;
 
-	//       cout << save_spaces_pos << endl;
+	}
 
-	//       // save_spaces_pos+count_spaces = i4;
-	//       // ++count_spaces;
-	      
-	//     }
-	//   }
-
-	//   for (int i5 = 0; i5 < 3; ++i5) {
-	//     for (int i6 = *(save_spaces_pos+3-i5); i6 < *(save_spaces_pos+3-i5-1); ++i6) {
-	//       temp_str.clear();
-	//       temp_str =+ line_my_file[i6];
-	//       char_line.append(temp_str);
-	//     }
-
-	//   }
-
-	//   count_spaces = 0;
-
-	// }
 
       }
 
@@ -148,7 +107,6 @@ mesh::mesh(char* filename){
   }
 
   // deallocate
-  delete[] save_spaces_pos;
 
   
 }
