@@ -2,22 +2,7 @@ cmake_minimum_required(VERSION 3.24.2)
 
 project(GMSHmesh)
 
-# add_subdirectory(FileManagerCPP)
-
-# target_link_directories(${PROJECT_NAME}
-#   PRIVATE FileManagerCPP
-# )
-
-# target_include_directories(${PROJECT_NAME}
-#   PUBLIC FileManagerCPP
-# )
-
-
-# add_library(FileManagerCPP FileManagerCPP/FileManagerCPP.cpp)
-
-# target_link_libraries(${PROJECT_NAME}
-#   FileManagerCPP
-# )
+add_subdirectory(FileManagerCPP)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
