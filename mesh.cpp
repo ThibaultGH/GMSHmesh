@@ -7,6 +7,8 @@
 // Other includes
 #include "mesh.hpp"
 #include "FileManagerCPP/FileManagerCPP.hpp"
+#include <gsl/gsl_cblas.h>
+
 using namespace std;
 
 mesh::mesh(char* filename){
@@ -91,6 +93,22 @@ mesh::mesh(char* filename){
 	  s1 = stoi(splitted_line[splitted_line.size()-3]);
 	  s2 = stoi(splitted_line[splitted_line.size()-2]);
 	  s3 = stoi(splitted_line[splitted_line.size()-1]);
+
+	  float s2s1[2];
+	  s2s1[0] = nodes[s2]-nodes[s1];
+	  s2s1[1] = nodes[s2+1]-nodes[s1+1];
+	  float s3s1[2];
+	  s3s1[0] = nodes[s3]-nodes[s1];
+	  s3s1[1] = nodes[s3+1]-nodes[s1+1];
+
+	  cout << "Triangle " << s1 << " " << s2 << " " << s3 << endl;
+	  cout << "with coordinates : " << endl;
+	  cout << "s1 : " << nodes[s1] << " " << nodes[s1+1] << endl;
+	  cout << "s2 : " << nodes[s2] << " " << nodes[s2+1] << endl;
+	  cout << "s3 : " << nodes[s3] << " " << nodes[s3+1] << endl;
+
+
+	  cout << "has an area of : " << cblas_sdot(2,s2s1,1,s3s1,1)/2 << endl;
 
 	  // if ((s1-s2)*(s1-s3)*(s2-s3) == 0) { // This is a flat triangle, a summet or an edge
 	  //   if (s2 == s3) { // This is a summit
