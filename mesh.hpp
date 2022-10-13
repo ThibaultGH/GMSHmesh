@@ -42,7 +42,8 @@ public:
 };
 
 // Functions that computes the area of an element given its nodes indexes
-float ComputeAreaElement(const int s1, const int s2, const int s3, const float* nodes);
+float ComputeAreaElement(const float* vec1, const float* vec2);
+
 #endif
   
 // void read_mesh_file(int &nb_corner, int* &corner, int &nb_border_edges, int* &border_edges, int &nb_nodes, int &nb_elements, float* &nodes, int* elements, const char* filename);
