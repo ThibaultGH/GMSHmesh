@@ -25,6 +25,16 @@ mesh::mesh(char* filename){
   bool found_nb_nodes = false;
   bool found_nb_elements = false;
   vector<string> splitted_line;
+  int s1,s2,s3; // integer to right down the number of the sommet that forms a triangle
+
+  Labels["OnBorder"] = {};
+  Labels["EdgesOnBorder"] = {};
+  Labels["ElementOnBorder"] = {};
+  Labels["Inside"] = {};
+  Labels["EdgesInside"] = {};
+  Labels["ElementInside"] = {};
+
+
 
   // save_spaces_pos = (int *) malloc(sizeof(int)*50);
 
@@ -65,8 +75,6 @@ mesh::mesh(char* filename){
 
 	  // cout << endl;
 
-
-
 	}
       }
       else if (found_nb_elements) { // We will enter once here after we've crossed the expression "$Elements" and load all the elements in the array elements.
@@ -79,11 +87,34 @@ mesh::mesh(char* filename){
 	  getline(my_file,line_my_file);
 
 	  splitted_line = split(line_my_file,space);
+	  
+	  s1 = stoi(splitted_line[splitted_line.size()-3]);
+	  s2 = stoi(splitted_line[splitted_line.size()-2]);
+	  s3 = stoi(splitted_line[splitted_line.size()-1]);
 
-	  for (int i3 = 0; i3 < splitted_line.size(); ++i3) {
-	    cout << splitted_line[i3] << " ";
-	  }
-	  cout << endl;
+	  // if ((s1-s2)*(s1-s3)*(s2-s3) == 0) { // This is a flat triangle, a summet or an edge
+	  //   if (s2 == s3) { // This is a summit
+
+	  //     NodesOnBorder[NbNodesOnBorder] = s2;
+	  //     ++NbNodesOnBorder;
+	      	      
+	  //   }
+	  //   else { // This an edge
+	      
+	  //   }
+	    
+	    
+	  // }
+	  // else { // This is a full triangle
+	    
+	  //   elements[(stoi(splitted_line[0])-1)*3] = s1;
+	  //   elements[(stoi(splitted_line[0])-1)*3+1] = s2;
+	  //   elements[(stoi(splitted_line[0])-1)*3+2] = s3;
+
+	  //   for (int i3 == 0; i3 < 3; ++i3) {
+	  //     elements[stoi(splitted_line[0])*3+i3] = s1;
+	  //   }	    
+	  // }
 
 	}
 
@@ -121,5 +152,13 @@ mesh::~mesh(){
   delete[] nodes;
   delete[] elements;
 
+
+}
+
+// Functions that computes the area of an element given its nodes indexes
+float ComputeAreaElement(const int s1, const int s2, const int s3, const float* nodes){
+
+  return 0.0;// (nodes[s1]-nodes[s2]).dot((nodes[s1]-nodes[s3]));
+  
 
 }
