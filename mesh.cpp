@@ -6,7 +6,7 @@
 
 // Other includes
 #include "mesh.hpp"
-
+#include "FileManagerCPP/FileManagerCPP.hpp"
 using namespace std;
 
 mesh::mesh(char* filename){
@@ -24,6 +24,7 @@ mesh::mesh(char* filename){
   int* save_spaces_pos;
   bool found_nb_nodes = false;
   bool found_nb_elements = false;
+  vector<string> out;
 
   save_spaces_pos = (int *) malloc(sizeof(int)*50);
 
@@ -52,7 +53,14 @@ mesh::mesh(char* filename){
 
 	for (int i0 = 0; i0 < nb_nodes; ++i0) {
 
-	  getline(my_file,line_my_file);	  
+	  getline(my_file,line_my_file);
+
+	  out = split(line_my_file,space);
+
+	  for (int k = 0; k < out.size(); ++k) {
+	    cout << out[k] << endl;
+	  }
+
 
 	  for (int i1 = 0; i1 < line_my_file.size(); ++i1) {
 

@@ -6,6 +6,12 @@ add_subdirectory(FileManagerCPP)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
-add_library(mesh mesh.cpp mesh.hpp)
+add_library(
+  mesh mesh.cpp
+  FileManagerCPP FileManagerCPP/FileManagerCPP.cpp
+)
 
-target_link_libraries(${PROJECT_NAME} mesh)
+target_link_libraries(${PROJECT_NAME}
+  mesh
+  FileManagerCPP
+)

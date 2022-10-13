@@ -6,7 +6,7 @@
 
 // Other includes
 #include "mesh.hpp"
-#include "FileManagerCPP.hpp"
+#include "FileManagerCPP/FileManagerCPP.hpp"
 
 using namespace std;
 
@@ -14,7 +14,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-  char *filename = "/home/tcimic/Projects/GMSHmesh/mesh/square.msh";
+  char filename[100] = "/home/tcimic/Projects/GMSHmesh/mesh/square.msh";
 
   mesh Th(filename);
   
