@@ -2,9 +2,8 @@
 #define MESH_HPP
 
 // Some STL C++ includes
-#include <map>
 #include <string>
-#include <list>
+#include <set>
 
 using namespace std;
 
@@ -16,17 +15,20 @@ private :
   // int* corners;
   // int nb_border_edges;
   // int* border_edges;
-  int NbNodesOnBorder;
-  int* NodesOnBorder;
-  int NbEdgesOnBorder;
-  int* EdgesOnBorder;
+  // int NbNodesOnBorder;
+  // int* NodesOnBorder;
+  // int NbEdgesOnBorder;
+  // int* EdgesOnBorder;
 
-  map<string,list<int>> Labels;
+  int NbEdgesOnBorder = 0;
+  set<int *> SetEdgesOnBorder;
+  int* EdgesOnBorder;
   
-  int nb_nodes;
-  float *nodes;
-  int nb_elements;
-  int* elements;
+  int NbNodes;
+  float *Nodes;
+  int NbElements;
+  int NbTriangle = 0;
+  int* Elements;
   char* filename;
 
 public:
@@ -41,9 +43,9 @@ public:
 
 };
 
-// Functions that computes the area of an element given its nodes indexes
+// Functions that computes the area of an element given its Nodes indexes
 float ComputeAreaElement(const float* vec1, const float* vec2);
 
 #endif
   
-// void read_mesh_file(int &nb_corner, int* &corner, int &nb_border_edges, int* &border_edges, int &nb_nodes, int &nb_elements, float* &nodes, int* elements, const char* filename);
+// void read_mesh_file(int &nb_corner, int* &corner, int &nb_border_edges, int* &border_edges, int &NbNodes, int &NbElements, float* &Nodes, int* Elements, const char* filename);
