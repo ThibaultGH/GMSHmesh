@@ -1,0 +1,6 @@
+#ifndef MESH_HPP
+#define MESH_HPP
+
+using namespace std;
+
+void read_mesh_file(const int* nb_nodes, const int* nb_elements, const float** nodes, const int** elements, const char* filename);
