@@ -20,25 +20,35 @@ private :
   // int NbEdgesOnBorder;
   // int* EdgesOnBorder;
 
-  int NbCorners = 0;
-  int NbEdgesOnBorder = 0;
-  int* EdgesOnBorder;
-  
-  int NbNodes;
-  float *Nodes;
-  int NbElements;
-  int NbTriangle = 0;
-  int* Elements;
-  int* Triangle;
-  char* filename;
+  int m_NbCorners = 0;
+  int m_NbEdgesOnBorder = 0;
+  int m_NbNodes;
+  int m_NbElements;
+  int m_NbTriangle = 0;
+  int* m_EdgesOnBorder;
+  float* m_Nodes;
+  int* m_Elements;
+  int* m_Triangle;
+  // char* m_filename;
 
 public:
 
-  // Constructor of an item of the class mesh
+  // Constructor and destructor of an item of the class mesh
   mesh(char* filename);
-
-  //Destructor of an item of the class mesh
   ~mesh();
+
+  // Some GETS function to read value of private members of an item of the class
+  int NbCorners() const;
+  int NbEdgesOnBorder() const;
+  int NbNodes() const;
+  int NbElements() const;
+  int NbTriangle() const;
+  int* EdgesOnBorder() const;
+  float* Nodes() const;
+  int* Elements() const;
+  int* Triangle() const;
+
+  
 
 
 

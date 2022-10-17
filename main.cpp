@@ -17,6 +17,13 @@ int main(int argc, char *argv[])
   char filename[100] = "/home/tcimic/Projects/GMSHmesh/mesh/square.msh";
 
   mesh Th(filename);
+
+  cout << Th.NbCorners() << endl;
+  
+  for (int i0 = 0; i0 < Th.NbTriangle(); ++i0) {
+    cout << "T" << i0 << " : " << Th.Triangle()[3*i0] << " " << Th.Triangle()[3*i0+1] << " " << Th.Triangle()[3*i0+2] << endl;
+  }
+
   
   return 0;
 }

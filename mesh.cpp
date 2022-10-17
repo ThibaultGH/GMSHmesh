@@ -18,34 +18,18 @@ mesh::mesh(char* filename){
   
   // Some local variables :
   string LineMyFile;
-  // string char_line;
-  
-  // string temp_str;
-  // int Linesize;
   char space = ' ';
-  // int* save_spaces_pos;
   bool FoundNbNodes = false;
   bool FoundNbElements = false;
   vector<string> SplittedLine;
   int s1,s2,s3; // integer to right down the indexes of the nodes that forms a triangle
-  float s2s1[2];
-  float s3s1[2];
-  int Edge[2];
-  
-  // Labels["NodesOnBorder"] = {};
-  // Labels["EdgesOnBorder"] = {};
-  // Labels["ElementOnBorder"] = {};
-  // Labels["NodesInside"] = {};
-  // Labels["EdgesInside"] = {};
-  // Labels["ElementInside"] = {};
-
-
-
-  // save_spaces_pos = (int *) malloc(sizeof(int)*50);
+  float *s2s1;
+  s2s1 = (float *) malloc(sizeof(float)*2);
+  float *s3s1;
+  s3s1 = (float *) malloc(sizeof(float)*2);
 
   // Start reading the mesh file
   if (MyFile.is_open()) {
-    // MyFile >> NbNodes;
 
     while (getline(MyFile,LineMyFile)) {
 
@@ -59,12 +43,12 @@ mesh::mesh(char* filename){
       
       if (FoundNbNodes) {
 	
-	NbNodes = stoi(LineMyFile);
+	m_NbNodes = stoi(LineMyFile);
 	FoundNbNodes = false;
 
-	Nodes = (float* ) malloc(sizeof(float)*NbNodes*3);
+	m_Nodes = (float* ) malloc(sizeof(float)*m_NbNodes*3);
 
-	for (int i0 = 0; i0 < NbNodes; ++i0) {
+	for (int i0 = 0; i0 < m_NbNodes; ++i0) {
 
 	  getline(MyFile,LineMyFile);
 
@@ -73,7 +57,7 @@ mesh::mesh(char* filename){
 	  // cout << "We are writting node " << SplittedLine[0] << " with coordinate : ";
 
 	  for (int i1 = 0; i1 < SplittedLine.size()-1; ++i1) {
-	    Nodes[(stoi(SplittedLine[0])-1)*3+i1] = stof(SplittedLine[i1+1]);
+	    m_Nodes[(stoi(SplittedLine[0])-1)*3+i1] = stof(SplittedLine[i1+1]);
 	    // cout << SplittedLine[i1+1] << " ";
 
 	  }
@@ -83,14 +67,14 @@ mesh::mesh(char* filename){
 	}
       }
       else if (FoundNbElements) { // We will enter once here after we've crossed the expression "$Elements" and load all the Elements in the array Elements.
-	NbElements = stoi(LineMyFile);
+	m_NbElements = stoi(LineMyFile);
         
 	
-	Elements = (int* ) malloc(sizeof(int)*NbElements*3);
+	m_Elements = (int* ) malloc(sizeof(int)*m_NbElements*3);
 	
 	FoundNbElements = false;
 
-	for (int i2 = 0; i2 < NbElements; ++i2) {
+	for (int i2 = 0; i2 < m_NbElements; ++i2) {
 	  getline(MyFile,LineMyFile);
 
 	  SplittedLine = split(LineMyFile,space);
@@ -103,11 +87,11 @@ mesh::mesh(char* filename){
 	  if (s1*s2*s3 == 0) {
 	    // cout << " its a corner" << endl;
 
-	    Elements[3*i2] = -1;
-	    Elements[3*i2+1] = s3;
-	    Elements[3*i2+2] = -1;
+	    m_Elements[3*i2] = -1;
+	    m_Elements[3*i2+1] = s3;
+	    m_Elements[3*i2+2] = -1;
 
-	    ++NbCorners;
+	    ++m_NbCorners;
 	    	    
 	  }
 	  else {
@@ -116,17 +100,17 @@ mesh::mesh(char* filename){
 	    --s2;
 	    --s3;
 	    
-	    s2s1[0] = Nodes[3*s2]-Nodes[3*s1];
-	    s2s1[1] = Nodes[3*s2+1]-Nodes[3*s1+1];
+	    s2s1[0] = m_Nodes[3*s2]-m_Nodes[3*s1];
+	    s2s1[1] = m_Nodes[3*s2+1]-m_Nodes[3*s1+1];
 	    
-	    s3s1[0] = Nodes[3*s3]-Nodes[3*s1];
-	    s3s1[1] = Nodes[3*s3+1]-Nodes[3*s1+1];
+	    s3s1[0] = m_Nodes[3*s3]-m_Nodes[3*s1];
+	    s3s1[1] = m_Nodes[3*s3+1]-m_Nodes[3*s1+1];
 
 	    // cout << "Triangle " << s1 << " " << s2 << " " << s3 << endl;
 	    // cout << "with coordinates : " << endl;
-	    // cout << "s1 : " << Nodes[3*s1] << " " << Nodes[3*s1+1] << endl;
-	    // cout << "s2 : " << Nodes[3*s2] << " " << Nodes[3*s2+1] << endl;
-	    // cout << "s3 : " << Nodes[3*s3] << " " << Nodes[3*s3+1] << endl;
+	    // cout << "s1 : " << m_Nodes[3*s1] << " " << m_Nodes[3*s1+1] << endl;
+	    // cout << "s2 : " << m_Nodes[3*s2] << " " << m_Nodes[3*s2+1] << endl;
+	    // cout << "s3 : " << m_Nodes[3*s3] << " " << m_Nodes[3*s3+1] << endl;
 
 	  
 	  
@@ -135,20 +119,20 @@ mesh::mesh(char* filename){
 	    if (ComputeAreaElement(s2s1,s3s1) == 0) {
 	      // cout << "it's a flat triangle, so each of its summits and edges are on the border !" << endl; Exactly (s2,s3) forms an edge on the boarder.
 
-	      Elements[3*i2] = -2;
-	      Elements[3*i2+1] = s2;
-	      Elements[3*i2+2] = s3;
+	      m_Elements[3*i2] = -2;
+	      m_Elements[3*i2+1] = s2;
+	      m_Elements[3*i2+2] = s3;
 	      
-	      ++NbEdgesOnBorder;
+	      ++m_NbEdgesOnBorder;
 
 	    }
 	    else {
 
-	      Elements[3*i2] = s1;
-	      Elements[3*i2+1] = s2;
-	      Elements[3*i2+2] = s3;
+	      m_Elements[3*i2] = s1;
+	      m_Elements[3*i2+1] = s2;
+	      m_Elements[3*i2+2] = s3;
 
-	      ++NbTriangle;
+	      ++m_NbTriangle;
 	      
 	    }
 
@@ -175,33 +159,34 @@ mesh::mesh(char* filename){
     cout << "ERROR : file " << filename << " NOT open !" << endl;
   }
 
-  EdgesOnBorder = (Elements+3*NbCorners);
-  Triangle = (Elements+3*(NbCorners+NbEdgesOnBorder));
+  m_EdgesOnBorder = (m_Elements+3*m_NbCorners);
+  m_Triangle = (m_Elements+3*(m_NbCorners+m_NbEdgesOnBorder));
 
-  cout << "There are " << NbElements << " elements with " << NbCorners << " corners, " << NbEdgesOnBorder << " edges on border, " << NbTriangle << " triangles." << endl;
+  // cout << "There are " << m_NbElements << " elements with " << m_NbCorners << " corners, " << m_NbEdgesOnBorder << " edges on border, " << m_NbTriangle << " triangles." << endl;
 
-  cout << "Here are the corners : " << endl;
+  // cout << "Here are the corners : " << endl;
 
-  for (int k0 = 0; k0 < NbCorners; ++k0) {
-    cout << "c" << k0 << " : " << Elements[3*k0] << " " << Elements[3*k0+1] << " " << Elements[3*k0+2] << endl;
-  }
+  // for (int k0 = 0; k0 < m_NbCorners; ++k0) {
+  //   cout << "c" << k0 << " : " << m_Elements[3*k0] << " " << m_Elements[3*k0+1] << " " << m_Elements[3*k0+2] << endl;
+  // }
 
-  cout << "Here are the edges :" << endl;
+  // cout << "Here are the edges :" << endl;
 
-  for (int k2 = 0; k2 < NbEdgesOnBorder; ++k2) {
-    cout << "e" << k2 << " : " << EdgesOnBorder[3*k2] << " " << EdgesOnBorder[3*k2+1] << " " << EdgesOnBorder[3*k2+2] << endl;
-  }
+  // for (int k2 = 0; k2 < m_NbEdgesOnBorder; ++k2) {
+  //   cout << "e" << k2 << " : " << m_EdgesOnBorder[3*k2] << " " << m_EdgesOnBorder[3*k2+1] << " " << m_EdgesOnBorder[3*k2+2] << endl;
+  // }
 
-  cout << "Here are the triangles :" << endl;
+  // cout << "Here are the triangles :" << endl;
   
-  for (int k2 = 0; k2 < NbTriangle; ++k2) {
-    cout << "e" << k2 << " : " << Triangle[3*k2] << " " << Triangle[3*k2+1] << " " << Triangle[3*k2+2] << endl;
-  }
+  // for (int k2 = 0; k2 < m_NbTriangle; ++k2) {
+  //   cout << "e" << k2 << " : " << m_Triangle[3*k2] << " " << m_Triangle[3*k2+1] << " " << m_Triangle[3*k2+2] << endl;
+  // }
 
 
 
   // deallocate
-
+  free(s2s1);
+  free(s3s1);
   
 }
 
@@ -212,22 +197,26 @@ mesh::~mesh(){
   // delete[] corners;
   // delete[] border_edges;
   
-  delete[] Nodes;
-  delete[] Elements;
+  delete[] m_Nodes;
+  delete[] m_Elements;
 
 
 }
+
+int mesh::NbCorners() const {return m_NbCorners;}
+int mesh::NbEdgesOnBorder() const {return m_NbEdgesOnBorder;}
+int mesh::NbNodes() const {return m_NbNodes;}
+int mesh::NbElements() const {return m_NbElements;}
+int mesh::NbTriangle() const {return m_NbTriangle;}
+int* mesh::EdgesOnBorder() const {return m_EdgesOnBorder;}
+float* mesh::Nodes() const {return m_Nodes;}
+int* mesh::Elements() const {return m_Elements;}
+int* mesh::Triangle() const {return m_Triangle;}
 
 // Functions that computes the area of an element given its Nodes indexes
 float ComputeAreaElement(const float* vec1, const float* vec2){
 
   float out;
-
-  // s2s1[0] = Nodes[s2]-Nodes[s1];
-  // s2s1[2] = Nodes[s2+1]-Nodes[s1+1];
-
-  // s3s1[0] = Nodes[s3]-Nodes[s1];
-  // s3s1[2] = Nodes[s3+1]-Nodes[s1+1];
 
   out = vec1[0]*vec2[1]-vec1[1]*vec2[0];
 
