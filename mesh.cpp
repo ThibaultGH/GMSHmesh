@@ -102,13 +102,19 @@ mesh::mesh(char* filename){
 
 	  if (s1*s2*s3 == 0) {
 	    // cout << " its a corner" << endl;
+
+	    Elements[3*i2] = -1;
+	    Elements[3*i2+1] = s3;
+	    Elements[3*i2+2] = -1;
+
+	    ++NbCorners;
 	    	    
 	  }
 	  else {
 	    
 	    --s1;
 	    --s2;
-	    --s3;	    
+	    --s3;
 	    
 	    s2s1[0] = Nodes[3*s2]-Nodes[3*s1];
 	    s2s1[1] = Nodes[3*s2+1]-Nodes[3*s1+1];
@@ -129,19 +135,18 @@ mesh::mesh(char* filename){
 	    if (ComputeAreaElement(s2s1,s3s1) == 0) {
 	      // cout << "it's a flat triangle, so each of its summits and edges are on the border !" << endl; Exactly (s2,s3) forms an edge on the boarder.
 
+	      Elements[3*i2] = -2;
+	      Elements[3*i2+1] = s2;
+	      Elements[3*i2+2] = s3;
+	      
 	      ++NbEdgesOnBorder;
 
-	      Edge[0] = s2;
-	      Edge[1] = s3;
-
-	      SetEdgesOnBorder.insert(Edge);	      
-	      
 	    }
 	    else {
 
-	      Elements[3*NbTriangle] = s1;
-	      Elements[3*NbTriangle+1] = s2;
-	      Elements[3*NbTriangle+2] = s3;
+	      Elements[3*i2] = s1;
+	      Elements[3*i2+1] = s2;
+	      Elements[3*i2+2] = s3;
 
 	      ++NbTriangle;
 	      
@@ -170,8 +175,27 @@ mesh::mesh(char* filename){
     cout << "ERROR : file " << filename << " NOT open !" << endl;
   }
 
-  for (int k0 = 0; k0 < NbTriangle; ++k0) {
-    cout << "T" << k0 << " : " << Elements[3*k0] << " " << Elements[3*k0+1] << " " << Elements[3*k0+2] << endl;
+  EdgesOnBorder = (Elements+3*NbCorners);
+  Triangle = (Elements+3*(NbCorners+NbEdgesOnBorder));
+
+  cout << "There are " << NbElements << " elements with " << NbCorners << " corners, " << NbEdgesOnBorder << " edges on border, " << NbTriangle << " triangles." << endl;
+
+  cout << "Here are the corners : " << endl;
+
+  for (int k0 = 0; k0 < NbCorners; ++k0) {
+    cout << "c" << k0 << " : " << Elements[3*k0] << " " << Elements[3*k0+1] << " " << Elements[3*k0+2] << endl;
+  }
+
+  cout << "Here are the edges :" << endl;
+
+  for (int k2 = 0; k2 < NbEdgesOnBorder; ++k2) {
+    cout << "e" << k2 << " : " << EdgesOnBorder[3*k2] << " " << EdgesOnBorder[3*k2+1] << " " << EdgesOnBorder[3*k2+2] << endl;
+  }
+
+  cout << "Here are the triangles :" << endl;
+  
+  for (int k2 = 0; k2 < NbTriangle; ++k2) {
+    cout << "e" << k2 << " : " << Triangle[3*k2] << " " << Triangle[3*k2+1] << " " << Triangle[3*k2+2] << endl;
   }
 
 

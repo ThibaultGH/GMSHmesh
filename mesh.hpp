@@ -20,8 +20,8 @@ private :
   // int NbEdgesOnBorder;
   // int* EdgesOnBorder;
 
+  int NbCorners = 0;
   int NbEdgesOnBorder = 0;
-  set<int *> SetEdgesOnBorder;
   int* EdgesOnBorder;
   
   int NbNodes;
@@ -29,6 +29,7 @@ private :
   int NbElements;
   int NbTriangle = 0;
   int* Elements;
+  int* Triangle;
   char* filename;
 
 public:
