@@ -20,7 +20,7 @@ endif()
 # endif()
 
 add_library(
-  GMSHmesh mesh.cpp
+  mesh mesh.cpp
   FileManagerCPP FileManagerCPP/FileManagerCPP.cpp
 )
 
